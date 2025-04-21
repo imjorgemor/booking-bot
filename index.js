@@ -163,3 +163,4 @@ cron.schedule('0 23 * * *', () => {
     timezone: 'Europe/Madrid'
 });
 
+registerCronSchedules();
