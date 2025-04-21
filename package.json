@@ -1,0 +1,22 @@
+{
+  "name": "sunny-day",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "postinstall": "npx playwright install --with-deps",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.46.1",
+    "@types/node": "^22.5.1"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "playwright": "^1.46.1"
+  }
+}
