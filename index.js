@@ -113,7 +113,7 @@ const runBookAsync = async ({ username, password, hour = '12:00' }) => {
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
         console.log('reserva confirmada J:' + formattedDate + " a las " + hour)
-        await browser.close();
+        await closeBrowser();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
     }
