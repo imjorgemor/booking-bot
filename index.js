@@ -54,7 +54,7 @@ async function closeBrowser() {
 // RUN BOOKING
 const runBookAsync = async ({ username, password, hour = '12:00' }) => {
     try {
-        console.log(`start booking ${user} at ${new Date().toISOString()}...`);
+        console.log(`start booking ${user}2 at ${new Date().toISOString()}...`);
         const browser = await getBrowser();
         const context = await browser.newContext();
         const page = await context.newPage();
