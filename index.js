@@ -131,7 +131,7 @@ async function registerCronSchedules() {
             const [, day, hour] = row;
             const [, day1, hour1] = row2;
             return {
-                username: profile.name,
+                username: profile.username,
                 password: profile.password,
                 schedules: [{ day: day, hour: hour }, { day: day1, hour: hour1 }]
             };
