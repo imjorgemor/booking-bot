@@ -1,3 +1,5 @@
+import playwright from 'playwright';
+import cron from 'node-cron';
 // CONFIGURATION
 //remember if bookings are at 23 utc, cron must start at 22:58 💾
 // 58 21 summer time // 58 22 winter time
@@ -24,7 +26,6 @@ const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRA3XJDvM
 const BROWSER_TYPE = 'chromium';
 
 // GLOBAL STATE
-let userSchedules = [];
 let currentCronJobs = [];
 let browser = null;
 
