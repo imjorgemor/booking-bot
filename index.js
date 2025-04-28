@@ -150,6 +150,7 @@ async function registerCronSchedules() {
                 currentCronJobs.push(job);
                 console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
             })
+
         })
     } catch (error) {
         console.error('Error fetching schedules:', error);
@@ -164,3 +165,4 @@ cron.schedule('0 23 * * *', () => {
 });
 
 registerCronSchedules();
+
