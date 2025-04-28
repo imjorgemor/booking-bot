@@ -53,9 +53,9 @@ async function closeBrowser() {
 }
 
 // RUN BOOKING
-const runBookAsync = async ({ username, password, hour = '12:00' }) => {
+const runBookAsync = async (username, password, hour = '12:00') => {
     try {
-        console.log(`start booking ${username}2 at ${new Date().toISOString()}...`);
+        console.log(`start booking ${username} at ${new Date().toISOString()}...`);
         const browser = await getBrowser();
         const context = await browser.newContext();
         const page = await context.newPage();
@@ -142,6 +142,7 @@ async function registerCronSchedules() {
         //schedule cron jobs
         userSchedules.forEach((schedule) => {
             const { username, password, schedules } = schedule;
+            console.log(username, password, schedules)
             schedules.forEach((schedule, index) => {
                 const cronExpression = WEEKDAYS[schedule.day];
                 const job = cron.schedule(cronExpression, () => {
@@ -164,5 +165,4 @@ cron.schedule('0 23 * * *', () => {
     timezone: 'Europe/Madrid'
 });
 
-registerCronSchedules();
-
+registerCronSchedules()
