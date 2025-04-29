@@ -67,7 +67,8 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         await page.click('#wp-submit'); // Replace with actual selector
         await page.waitForSelector('.mkdf-st-title');
         console.log('login ok')
-        await page.getByText('Accede para reservar tus clases y pistas').click();
+        await page.waitForTimeout(1000);
+        await page.getByText('Accede para reservar tus clases y pistas').click({ force: true });
         await page.waitForSelector('#dateAACC');
         await page.goto('https://clubmetropolitan.provis.es/Reservas/ActividadesLibresHorariosZonas?idActividadLibre=137&integration=False')
         console.log('redirect to booking page ok')
