@@ -8,3 +8,5 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 /monitoring.js
+/testFile.js
+/testbot.js

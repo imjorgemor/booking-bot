@@ -34,12 +34,6 @@ async function getBrowser() {
     if (!browser) {
         browser = await playwright[BROWSER_TYPE].launch({
             headless: true,
-            args: [
-                '--disable-gpu',
-                '--disable-dev-shm-usage',
-                '--no-sandbox',
-                '--disable-extensions'
-            ]
         });
     }
     return browser;
