@@ -53,7 +53,7 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         // open date selector
         await page.waitForSelector('#dateAALL');
         await page.click('#dateAALL');
-        console.log('start waiting for date selector')
+        console.log('start waiting for midnight')
         // Create a Date object for today (remember server is one day before)
         const date = new Date();
         // Add [number] days to the current date remember reservation is made one day before
@@ -91,7 +91,7 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         await page.waitForSelector("#btnConfirmar")
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
-        console.log('reserva confirmada J:' + formattedDate + " a las " + hour)
+        console.log(`reserva confirmada para :${username}` + formattedDate + " a las " + hour)
         await browser.close();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
@@ -128,8 +128,11 @@ async function registerCronSchedules() {
             schedules.forEach((schedule, index) => {
                 const cronExpression = WEEKDAYS[schedule.day];
                 const job = cron.schedule(cronExpression, () => {
-                    runBookAsync(username, password, schedule.hour);
-                });
+                    const delay = Math.floor(Math.random() * 200) + 100; // random between 100–300ms
+                    setTimeout(() => {
+                      runBookAsync(username, password, schedule.hour);
+                    }, delay);
+                  });
                 currentCronJobs.push(job);
                 console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
             })
