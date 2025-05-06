@@ -27,30 +27,14 @@ const BROWSER_TYPE = 'chromium';
 
 // GLOBAL STATE
 let currentCronJobs = [];
-let browser = null;
-
-// BROWSER MANAGEMENT
-async function getBrowser() {
-    if (!browser) {
-        browser = await playwright[BROWSER_TYPE].launch({
-            headless: true,
-        });
-    }
-    return browser;
-}
-
-async function closeBrowser() {
-    if (browser) {
-        await browser.close();
-        browser = null;
-    }
-}
 
 // RUN BOOKING
 const runBookAsync = async (username, password, hour = '12:00') => {
     try {
         console.log(`start booking ${username} at ${new Date().toISOString()}...`);
-        const browser = await getBrowser();
+        const browser = await playwright[BROWSER_TYPE].launch({
+            headless: true,
+        });
         const context = await browser.newContext();
         const page = await context.newPage();
         // Navigate to the login page
@@ -69,7 +53,7 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         // open date selector
         await page.waitForSelector('#dateAALL');
         await page.click('#dateAALL');
-
+        console.log('start waiting for date selector')
         // Create a Date object for today (remember server is one day before)
         const date = new Date();
         // Add [number] days to the current date remember reservation is made one day before
@@ -108,7 +92,7 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
         console.log('reserva confirmada J:' + formattedDate + " a las " + hour)
-        await closeBrowser();
+        await browser.close();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
     }
