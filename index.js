@@ -91,7 +91,7 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         const now = new Date();
         const midnightSpain = new Date();
         //Set time to midnight i 00-1 hour spain + 0.5 seconds in Spain's local time (UTC+1)
-        midnightSpain.setUTCHours(23, 0, 0, 100); // 23:00:00.250 UTC, equivalent to 00:00:00.250 in Spain (UTC+1)
+        midnightSpain.setUTCHours(22, 0, 0, 100); // 23:00:00.250 UTC winter time// 22 utc summer time, equivalent to 00:00:00.100 in Spain (UTC+1)
         // Adjust for the next day if it's already past midnight in Spain
         if (now.getTime() >= midnightSpain.getTime()) {
             midnightSpain.setUTCDate(midnightSpain.getUTCDate() + 1);
