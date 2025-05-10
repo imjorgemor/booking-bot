@@ -1,5 +1,5 @@
-import { WEEKDAYS } from "./config";
-import { runBookAsync } from "./runbook";
+import { WEEKDAYS } from "./config.js";
+import { runBookAsync } from "./runbook.js";
 
 let currentCronJobs = [];
 
