@@ -35,7 +35,7 @@ const updateCronSchedule = async () => {
 };
 
 cron.schedule('0 23 * * *', () => {
-    console.log(`Updating cron schedules at ${new Date().toISOString()}`);
+    console.log(`Updating cron schedules for J at ${new Date().toISOString()}`);
     updateCronSchedule();
 }, {
     timezone: 'Europe/Madrid'
