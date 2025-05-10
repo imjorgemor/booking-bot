@@ -1,35 +1,7 @@
 import playwright from 'playwright';
-import cron from 'node-cron';
-// CONFIGURATION
-//remember if bookings are at 23 utc, cron must start at 22:58 💾
-// 58 21 summer time // 58 22 winter time
-const WEEKDAYS = {
-    SUNDAY: '58 21 * * 3', //sunday 23.59 => jueves
-    MONDAY: '58 21 * * 4', //monday 23.59 => viernes
-    TUESDAY: '58 21 * * 5', // tuesday 23.59 => sabado
-    WEDNESDAY: '58 21 * * 6', // wednesday 23.59 => domingo
-    THURSDAY: '58 21 * * 0', // thursday 23.59 => lunes
-    FRIDAY: '58 21 * * 1', // friday 23.59 => martes
-    SATURDAY: '58 21 * * 2' // saturday 23.59 => miercoles
-}
-
-const { USERNAME_J, USERNAME_P, USERNAME_T, PASSWORD_J, PASSWORD_P, PASSWORD_T } = process.env
-
-const PROFILES = [
-    { username: USERNAME_J, password: PASSWORD_J, dayOne: 1, dayTwo: 5 },
-    { username: USERNAME_T, password: PASSWORD_T, dayOne: 2, dayTwo: 6 },
-    { username: USERNAME_P, password: PASSWORD_P, dayOne: 3, dayTwo: 7 },
-];
-
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRA3XJDvMjOlJle2aIsxIBxfvxs8kYDx3ZMNzLzvETZnK06EHFZ4HC-d153Ks5JqQZIB49sI_lH568A/pub?gid=0&single=true&output=csv';
-
 const BROWSER_TYPE = 'chromium';
 
-// GLOBAL STATE
-let currentCronJobs = [];
-
-// RUN BOOKING
-const runBookAsync = async (username, password, hour = '12:00') => {
+export const runBookAsync = async (username, password, hour = '12:00') => {
     try {
         console.log(`start booking ${username} at ${new Date().toISOString()}...`);
         const browser = await playwright[BROWSER_TYPE].launch({
@@ -100,54 +72,3 @@ const runBookAsync = async (username, password, hour = '12:00') => {
         await browser.close();
     }
 };
-
-// GET USER DATA
-async function registerCronSchedules() {
-    try {
-        const response = await fetch(SHEET_CSV_URL);
-        const data = await response.text();
-        //get schedules
-        const userSchedules = PROFILES.map(profile => {
-            const row = data.split('\n')[profile.dayOne].split('\r')[0].split(',');
-            const row2 = data.split('\n')[profile.dayTwo].split('\r')[0].split(',');
-            const [, day, hour] = row;
-            const [, day1, hour1] = row2;
-            return {
-                username: profile.username,
-                password: profile.password,
-                schedules: [{ day: day, hour: hour }, { day: day1, hour: hour1 }]
-            };
-        })
-        //stop cron jobs
-        currentCronJobs.forEach(job => job.stop());
-        currentCronJobs = []; // Reset jobs array
-        //schedule cron jobs
-        userSchedules.forEach((schedule) => {
-            const { username, password, schedules } = schedule;
-            console.log(username, password, schedules)
-            schedules.forEach((schedule, index) => {
-                const cronExpression = WEEKDAYS[schedule.day];
-                const job = cron.schedule(cronExpression, () => {
-                    const delay = Math.floor(Math.random() * 200) + 100; // random between 100–300ms
-                    setTimeout(() => {
-                      runBookAsync(username, password, schedule.hour);
-                    }, delay);
-                  });
-                currentCronJobs.push(job);
-                console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
-            })
-
-        })
-    } catch (error) {
-        console.error('Error fetching schedules:', error);
-    }
-}
-
-cron.schedule('0 23 * * *', () => {
-    console.log(`Updating cron schedules at ${new Date().toISOString()}`);
-    registerCronSchedules();
-}, {
-    timezone: 'Europe/Madrid'
-});
-
-registerCronSchedules()
