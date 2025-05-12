@@ -52,6 +52,10 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         if (now.getTime() >= midnightSpain.getTime()) {
             midnightSpain.setUTCDate(midnightSpain.getUTCDate() + 1);
         }
+        //check if hour is available
+        const hourSelector = `[data-content="${hour}"]`
+        await page.waitForSelector(hourSelector)
+        console.log('selector hour identified')
         // Calculate the time difference
         const timeToWait = midnightSpain.getTime() - now.getTime();
         await new Promise(resolve => setTimeout(resolve, timeToWait));
