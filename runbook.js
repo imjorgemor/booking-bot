@@ -68,7 +68,5 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
        
-    } finally {
-        await browser.close();
     }
 };
