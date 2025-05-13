@@ -1,31 +1,35 @@
 import playwright from 'playwright';
-const BROWSER_TYPE = 'chromium';
+import cron from 'node-cron';
+const browserType = 'chromium'; // chrome
+import { DAY_DEFINITIONS } from './config';
 
-export const runBookAsync = async (username, password, hour = '12:00') => {
+let currentCronJobs = [];
+
+const runBookAsync = async (hour = '12:00') => {
     try {
-        console.log(`start booking ${username} at ${new Date().toISOString()}...`);
-        const browser = await playwright[BROWSER_TYPE].launch({
-            headless: true,
-        });
+        console.log(`start booking P at ${new Date().toISOString()}...`);
+        const browser = await playwright[browserType].launch({ headless: true });
         const context = await browser.newContext();
         const page = await context.newPage();
         // Navigate to the login page
         await page.goto('https://clubmetropolitan.com/socios/login?referer=%2Fsocios%2Fperfil%2F');
+        // getting login credentials
+        const username = process.env.USERNAME_P;
+        const password = process.env.PASSWORD_P;
         // Perform login and redirect to book page
         await page.fill('#email', username); // Replace with actual selector
         await page.fill('#pwd', password); // Replace with actual selector
         await page.click('#wp-submit'); // Replace with actual selector
         await page.waitForSelector('.mkdf-st-title');
+        await page.getByText('Accede para reservar tus clases y pistas').click();
         console.log('login ok')
-        await page.waitForTimeout(1000);
-        await page.getByText('Accede para reservar tus clases y pistas').click({ force: true });
         await page.waitForSelector('#dateAACC');
         await page.goto('https://clubmetropolitan.provis.es/Reservas/ActividadesLibresHorariosZonas?idActividadLibre=137&integration=False')
         console.log('redirect to booking page ok')
         // open date selector
         await page.waitForSelector('#dateAALL');
         await page.click('#dateAALL');
-        console.log('start waiting for midnight')
+
         // Create a Date object for today (remember server is one day before)
         const date = new Date();
         // Add [number] days to the current date remember reservation is made one day before
@@ -47,19 +51,15 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         const now = new Date();
         const midnightSpain = new Date();
         //Set time to midnight i 00-1 hour spain + 0.5 seconds in Spain's local time (UTC+1)
-        midnightSpain.setUTCHours(22, 0, 0, 100); // 23:00:00.250 UTC winter time// 22 utc summer time, equivalent to 00:00:00.100 in Spain (UTC+1)
+        midnightSpain.setUTCHours(22, 0, 0, 100); // 23:00:00.250 UTC, equivalent to 00:00:00.250 in Spain (UTC+1)
         // Adjust for the next day if it's already past midnight in Spain
         if (now.getTime() >= midnightSpain.getTime()) {
             midnightSpain.setUTCDate(midnightSpain.getUTCDate() + 1);
         }
-        //check if hour is available
-        const hourSelector = `[data-content="${hour}"]`
-        await page.waitForSelector(hourSelector)
-        console.log('selector hour identified')
         // Calculate the time difference
         const timeToWait = midnightSpain.getTime() - now.getTime();
         await new Promise(resolve => setTimeout(resolve, timeToWait));
-
+        console.log("waiting for midnight to make reservation")
         // make reservations exact hour[set the hour of reservation]
         await page.click(`[data-content="${hour}"]`)
         await page.waitForSelector("#btnReserva")
@@ -67,10 +67,47 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.waitForSelector("#btnConfirmar")
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
-        console.log(`reserva confirmada para :${username}` + formattedDate + " a las " + hour)
+        console.log('reserva confirmada P:'+formattedDate+" a las "+hour)
         await browser.close();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
-       
     }
 };
+
+const updateCronSchedule = async () => {
+    try {
+        //get data
+        const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRA3XJDvMjOlJle2aIsxIBxfvxs8kYDx3ZMNzLzvETZnK06EHFZ4HC-d153Ks5JqQZIB49sI_lH568A/pub?gid=0&single=true&output=csv');
+        const data = await response.text();
+        const row = data.split('\n')[3].split('\r')[0].split(',');
+        const row2 = data.split('\n')[7].split('\r')[0].split(',');
+        const [, day, hour] = row
+        const [, day1, hour1] = row2;
+        // Stop all current cron jobs
+        currentCronJobs.forEach(job => job.stop());
+        currentCronJobs = []; // Reset jobs array
+        // Create new cron jobs
+        const schedules = [{ day: day, hour: hour }, { day: day1, hour: hour1 }];
+        schedules.forEach((schedule, index) => {
+            const cronExpression = DAY_DEFINITIONS[schedule.day]
+            const job = cron.schedule(cronExpression, () => {
+                console.log(`Running booking P #${index + 1} at ${new Date().toISOString()}...`);
+                runBookAsync(schedule.hour);
+            });
+            currentCronJobs.push(job);
+            console.log(`Scheduling booking #${index + 1} for #P on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
+        })
+    } catch (error) {
+        console.error('Failed to update cron schedule P:', error);
+    }
+};
+
+cron.schedule('0 23 * * *', () => {
+    console.log(`Updating cron schedules for J at ${new Date().toISOString()}`);
+    updateCronSchedule();
+}, {
+    timezone: 'Europe/Madrid'
+});
+
+updateCronSchedule();
+

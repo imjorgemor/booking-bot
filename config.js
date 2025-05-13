@@ -1,7 +1,7 @@
 // CONFIGURATION
 //remember if bookings are at 23 utc, cron must start at 22:58 💾
 // 58 21 summer time // 58 22 winter time
-export const WEEKDAYS = {
+export const DAY_DEFINITIONS = {
     SUNDAY: '58 21 * * 3', //sunday 23.59 => jueves
     MONDAY: '58 21 * * 4', //monday 23.59 => viernes
     TUESDAY: '58 21 * * 5', // tuesday 23.59 => sabado
