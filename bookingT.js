@@ -1,7 +1,7 @@
 import playwright from 'playwright';
 import cron from 'node-cron';
 const browserType = 'chromium'; // chrome
-import { DAY_DEFINITIONS } from './config';
+import { DAY_DEFINITIONS } from './config.js';
 
 let currentCronJobs = [];
 
