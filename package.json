@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node imjorgemor.js & node paupyus.js & node tomaslerida.js & wait",
+    "start": "node bookingJ & node bookingP & node bookingT & wait",
     "postinstall": "npx playwright install --with-deps"
   },
   "keywords": [],
