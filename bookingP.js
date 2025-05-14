@@ -1,8 +1,9 @@
 import playwright from 'playwright';
 import cron from 'node-cron';
-const browserType = 'chromium'; // chrome
 import { DAY_DEFINITIONS } from './config.js';
+const browserType = 'chromium'; // chrome
 
+// state
 let currentCronJobs = [];
 
 const runBookAsync = async (hour = '12:00') => {
@@ -26,6 +27,10 @@ const runBookAsync = async (hour = '12:00') => {
         await page.waitForSelector('#dateAACC');
         await page.goto('https://clubmetropolitan.provis.es/Reservas/ActividadesLibresHorariosZonas?idActividadLibre=137&integration=False')
         console.log('redirect to booking page ok')
+        //accept cookies banner
+        await page.waitForSelector('#btnCookiesTodas');
+        await page.click('#btnCookiesTodas');
+        console.log('accept cookies ok')
         // open date selector
         await page.waitForSelector('#dateAALL');
         await page.click('#dateAALL');
@@ -67,7 +72,7 @@ const runBookAsync = async (hour = '12:00') => {
         await page.waitForSelector("#btnConfirmar")
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
-        console.log('reserva confirmada P:'+formattedDate+" a las "+hour)
+        console.log('reserva confirmada P:' + formattedDate + " a las " + hour)
         await browser.close();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
