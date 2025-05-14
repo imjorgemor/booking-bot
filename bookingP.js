@@ -63,7 +63,6 @@ const runBookAsync = async (hour = '12:00') => {
         // Calculate the time difference
         const timeToWait = midnightSpain.getTime() - now.getTime();
         await new Promise(resolve => setTimeout(resolve, timeToWait));
-        console.log("waiting for midnight to make reservation")
         // make reservations exact hour[set the hour of reservation]
         await page.click(`[data-content="${hour}"]`)
         await page.waitForSelector("#btnReserva")
