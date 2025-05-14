@@ -51,7 +51,6 @@ const runBookAsync = async (hour = '12:00') => {
         await page.waitForSelector(dateSelector);
         await page.click(dateSelector)
         await page.waitForSelector('.hour-collapse')
-
         // Calculate buffer time to wait until midnight, new date return utc date
         const now = new Date();
         const midnightSpain = new Date();

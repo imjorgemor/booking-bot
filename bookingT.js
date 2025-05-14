@@ -27,10 +27,10 @@ const runBookAsync = async (hour = '12:00') => {
         await page.waitForSelector('#dateAACC');
         await page.goto('https://clubmetropolitan.provis.es/Reservas/ActividadesLibresHorariosZonas?idActividadLibre=137&integration=False')
         console.log('redirect to booking page ok')
-         //accept cookies banner
-         await page.waitForSelector('#btnCookiesTodas');
-         await page.click('#btnCookiesTodas');
-         console.log('accept cookies ok')
+        //accept cookies banner
+        await page.waitForSelector('#btnCookiesTodas');
+        await page.click('#btnCookiesTodas');
+        console.log('accept cookies ok')
         // open date selector
         await page.waitForSelector('#dateAALL');
         await page.click('#dateAALL');
@@ -51,7 +51,6 @@ const runBookAsync = async (hour = '12:00') => {
         await page.waitForSelector(dateSelector);
         await page.click(dateSelector)
         await page.waitForSelector('.hour-collapse')
-
         // Calculate buffer time to wait until midnight, new date return utc date
         const now = new Date();
         const midnightSpain = new Date();
