@@ -64,6 +64,8 @@ const runBookAsync = async (hour = '12:00') => {
         const timeToWait = midnightSpain.getTime() - now.getTime();
         await new Promise(resolve => setTimeout(resolve, timeToWait));
         // make reservations exact hour[set the hour of reservation]
+        await page.waitForSelector(`[data-content="${hour}"]`)
+        console.log('hour available')
         await page.click(`[data-content="${hour}"]`)
         await page.waitForSelector("#btnReserva")
         await page.click("#btnReserva")
