@@ -3,10 +3,33 @@ const browserType = 'chromium'; // chrome
 
 export const runBookAsync = async (username, password, hour = '12:00') => {
     try {
-        console.log(`start booking J at ${new Date().toISOString()}...`);
-        const browser = await playwright[browserType].launch({ headless: true });
-        const context = await browser.newContext();
+        console.log(`start booking ${username} at ${new Date().toISOString()}...`);
+        const browser = await playwright[browserType].launch({
+            headless: true,
+            //new
+            args: [
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding',
+                '--memory-pressure-off'
+            ]
+        });
+        const context = await browser.newContext({
+            // Use Railway's ephemeral filesystem
+            userDataDir: `/tmp/booking-${username.id}-${Date.now()}-${Math.random()}`,
+    
+            // Optional: Clear any inherited cookies
+            storageState: undefined,
+            
+            // Unique user agent per instance (optional)
+            userAgent: `Mozilla/5.0 (compatible; BookingBot/${user.id})`
+        });
         const page = await context.newPage();
+        
+        await context.clearCookies();//check if this works
         // Navigate to the login page
         await page.goto('https://clubmetropolitan.com/socios/login?referer=%2Fsocios%2Fperfil%2F');
         // Perform login and redirect to book page
@@ -64,7 +87,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.waitForSelector("#btnConfirmar")
         await page.click("#btnConfirmar")
         await page.waitForSelector(".swal-icon--success")
-        console.log('reserva confirmada J:' + formattedDate + " a las " + hour)
+        console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
         await browser.close();
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
