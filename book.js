@@ -17,7 +17,13 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
                 '--memory-pressure-off'
             ]
         });
-        const context = await browser.newContext();
+        const context = await browser.newContext({
+            viewport: { width: 1920, height: 1080 },
+            ignoreHTTPSErrors: true,
+            acceptDownloads: false,
+            reducedMotion: 'reduce', // Faster animations
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        });
         const page = await context.newPage();
         // Navigate to the login page
         await page.goto('https://clubmetropolitan.com/socios/login?referer=%2Fsocios%2Fperfil%2F');
