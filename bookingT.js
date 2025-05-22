@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import { DAY_DEFINITIONS } from './config.js';
+import { runBookAsync } from './book.js';
 
 // state
 let currentCronJobs = [];
