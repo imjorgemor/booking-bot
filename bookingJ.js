@@ -9,7 +9,7 @@ const username = process.env.USERNAME_J;
 const password = process.env.PASSWORD_J;
 
 // Function to run the booking process
-const runBookAsync = async (username, password, hour = '12:00') => {
+const runBookAsync = async ( hour = '12:00') => {
     try {
         console.log(`start booking ${username} at ${new Date().toISOString()}...`);
         const browser = await playwright[browserType].launch({
@@ -111,7 +111,7 @@ const updateCronSchedule = async () => {
             const cronExpression = DAY_DEFINITIONS[schedule.day]
             const job = cron.schedule(cronExpression, () => {
                 console.log(`Running booking ${username} #${index + 1} at ${new Date().toISOString()}...`);
-                runBookAsync(username, password, schedule.hour);
+                runBookAsync(schedule.hour);
             });
             currentCronJobs.push(job);
             console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
