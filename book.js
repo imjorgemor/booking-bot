@@ -7,15 +7,6 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         const browser = await playwright[browserType].launch({
             headless: true,
             //new
-            args: [
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--disable-background-timer-throttling',
-                '--disable-backgrounding-occluded-windows',
-                '--disable-renderer-backgrounding',
-                '--memory-pressure-off'
-            ]
         });
         const context = await browser.newContext();
         const page = await context.newPage();
