@@ -56,7 +56,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.click(dateSelector)
         await page.waitForSelector('.hour-collapse')
         await page.waitForSelector(`[data-content="${hour}"]`)
-        console.log('hour available')
+        console.log('check hour available before midnight')
         // Calculate buffer time to wait until midnight, new date return utc date
         const now = new Date();
         const midnightSpain = new Date();
