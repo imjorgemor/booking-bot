@@ -66,6 +66,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.click("#btnReserva")
         await page.waitForSelector("#btnConfirmar")
         await page.click("#btnConfirmar")
+        console.log(`reserva enviada ${username} :` + formattedDate + " a las " + hour)
         await page.waitForSelector(".swal-icon--success")
         console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
         await browser.close();
