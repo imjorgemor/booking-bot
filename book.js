@@ -2,7 +2,7 @@ import playwright from 'playwright';
 import nodemailer from 'nodemailer';
 
 //CONF EMAIL
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         type: 'OAuth2',
