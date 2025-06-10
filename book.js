@@ -1,4 +1,19 @@
 import playwright from 'playwright';
+import nodemailer from 'nodemailer';
+
+//CONF EMAIL
+const transporter = nodemailer.createTransporter({
+    service: 'gmail',
+    auth: {
+        type: 'OAuth2',
+        user: process.env.USERNAME_J,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+    },
+});
+
+//CONF CHROMIUM
 const browserType = 'chromium'; // chrome
 
 export const runBookAsync = async (username, password, hour = '12:00') => {
@@ -70,6 +85,17 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.waitForSelector(".swal-icon--success")
         console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
         await browser.close();
+        //SEND EMAIL
+        transporter.sendMail({
+            from: process.env.USERNAME_J,
+            to: [process.env.USERNAME_P, process.env.USERNAME_T], // Change this to test email
+            subject: 'YOUS A BITCH',
+            text: `YO BITCH! Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}`,
+            html: `<h1>YO BITCH!</h1><p>Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}</p>`
+
+        }, (error) => {
+            console.error('Error:', error);
+        });
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
     }
