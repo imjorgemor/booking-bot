@@ -92,9 +92,6 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
             subject: 'YOUS A BITCH',
             text: `YO BITCH! Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}`,
             html: `<h1>YO BITCH!</h1><p>Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}</p>`
-
-        }, (error) => {
-            console.error('Error:', error);
         });
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
