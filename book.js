@@ -61,7 +61,8 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         await page.waitForSelector(dateSelector);
         await page.click(dateSelector)
         await page.waitForSelector('.hour-collapse')
-        await page.waitForSelector(`[data-content="${hour}"]`)
+        const buttonClick = await page.waitForSelector(`[data-content="${hour}"]`)
+        const pista = await buttonClick.innerHTML()
         console.log('check hour available before midnight')
         // Calculate buffer time to wait until midnight, new date return utc date
         const now = new Date();
@@ -89,9 +90,9 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         transporter.sendMail({
             from: process.env.USERNAME_J,
             to: [process.env.USERNAME_P, process.env.USERNAME_T], // Change this to test email
-            subject: 'YOUS A BITCH',
-            text: `YO BITCH! Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}`,
-            html: `<h1>YO BITCH!</h1><p>Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour}</p>`
+            subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
+            text: `YO PERRA! RESERVA CONFIRMADA a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
+            html: `<h1>YO PERRA!</h1><p>RESERVA CONFIRMADA Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
         });
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
