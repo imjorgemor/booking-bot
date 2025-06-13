@@ -1,5 +1,6 @@
 import playwright from 'playwright';
 import nodemailer from 'nodemailer';
+import { htmlTemplate } from './template';
 
 //CONF EMAIL
 const transporter = nodemailer.createTransport({
@@ -89,12 +90,19 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
         //SEND EMAIL
         transporter.sendMail({
             from: process.env.USERNAME_J,
-            to: [process.env.USERNAME_P, process.env.USERNAME_T], // Change this to test email
+            to: [process.env.USERNAME_P, process.env.USERNAME_T], 
             subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
             text: `YO PERRA! RESERVA CONFIRMADA a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
-            html: `<h1>YO PERRA!</h1><p>RESERVA CONFIRMADA Se ha hecho una reserva a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
+            html: htmlTemplate(username, pista, formattedDate, hour)
         });
     } catch (error) {
         console.log('no se ha completado la reserva error:' + error)
+        transporter.sendMail({
+            from: process.env.USERNAME_J,
+            to: [process.env.USERNAME_P, process.env.USERNAME_T],
+            subject: 'YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO',
+            text: `YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
+            html: `<h1>YOUS A BITCH! INTENTALO OTRA VEZ!</h1><p>LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
+        });
     }
 };
