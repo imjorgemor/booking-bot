@@ -1,4 +1,4 @@
-export const htmlTemplate = (name, pista, date, hour)=> `<!DOCTYPE html>
+export const htmlTemplate = (name, pista, date, hour) => `<!DOCTYPE html>
 <html lang="en">
 
 <head>

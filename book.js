@@ -1,6 +1,6 @@
 import playwright from 'playwright';
 import nodemailer from 'nodemailer';
-import { htmlTemplate } from './template';
+import { htmlTemplate } from './template.js';
 
 //CONF EMAIL
 const transporter = nodemailer.createTransport({
