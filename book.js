@@ -1,6 +1,6 @@
 import playwright from 'playwright';
 import nodemailer from 'nodemailer';
-import { google } from 'google-auth-library';
+const { google } =  'google-auth-library';
 import { htmlTemplate } from './template.js';
 
 // CONF GOOGLE TOKEN
