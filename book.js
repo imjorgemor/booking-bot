@@ -4,35 +4,28 @@ import { google } from 'google-auth-library';
 import { htmlTemplate } from './template.js';
 
 // CONF GOOGLE TOKEN
-const getAccessToken = async () => {
+const getTransporter = async () => {
   const oAuth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET
   );
-
   oAuth2Client.setCredentials({
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
   });
-
   const res = await oAuth2Client.getAccessToken();
-  return res.token;
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: process.env.USERNAME_J,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+      accessToken: res.token,
+    },
+  });
 };
 
-const accessToken = await getAccessToken();
-
-
-//CONF EMAIL
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: process.env.USERNAME_J,
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-    accessToken: accessToken,
-  },
-});
 
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
@@ -108,6 +101,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
     await browser.close();
     //SEND EMAIL
+    const transporter = await getTransporter();
     transporter.sendMail({
       from: process.env.USERNAME_J,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
@@ -117,6 +111,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     });
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
+    const transporter = await getTransporter();
     transporter.sendMail({
       from: process.env.USERNAME_J,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
