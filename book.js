@@ -1,19 +1,11 @@
 import playwright from 'playwright';
 import nodemailer from 'nodemailer';
-const { google } =  'google-auth-library';
 import { htmlTemplate } from './template.js';
 
 // CONF GOOGLE TOKEN
-const getTransporter = async () => {
-  const oAuth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-  oAuth2Client.setCredentials({
-    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-  });
-  const res = await oAuth2Client.getAccessToken();
-  return nodemailer.createTransport({
+
+const getTransporter = () =>
+  nodemailer.createTransport({
     service: 'gmail',
     auth: {
       type: 'OAuth2',
@@ -24,7 +16,6 @@ const getTransporter = async () => {
       accessToken: res.token,
     },
   });
-};
 
 
 //CONF CHROMIUM
@@ -101,7 +92,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
     await browser.close();
     //SEND EMAIL
-    const transporter = await getTransporter();
+    const transporter = getTransporter();
     transporter.sendMail({
       from: process.env.USERNAME_J,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
@@ -111,7 +102,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     });
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
-    const transporter = await getTransporter();
+    const transporter = getTransporter();
     transporter.sendMail({
       from: process.env.USERNAME_J,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
