@@ -1,21 +1,21 @@
 import playwright from 'playwright';
-import nodemailer from 'nodemailer';
-import { htmlTemplate } from './template.js';
+// import nodemailer from 'nodemailer';
+// import { htmlTemplate } from './template.js';
 
 // CONF GOOGLE TOKEN
 
-const getTransporter = () =>
-  nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.USERNAME_J,
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-      accessToken: res.token,
-    },
-  });
+// const getTransporter = () =>
+//   nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       type: 'OAuth2',
+//       user: process.env.USERNAME_J,
+//       clientId: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+//       accessToken: res.token,
+//     },
+//   });
 
 
 //CONF CHROMIUM
@@ -92,23 +92,23 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
     await browser.close();
     //SEND EMAIL
-    const transporter = getTransporter();
-    transporter.sendMail({
-      from: process.env.USERNAME_J,
-      to: [process.env.USERNAME_P, process.env.USERNAME_T],
-      subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
-      text: `YO PERRA! RESERVA CONFIRMADA a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
-      html: htmlTemplate(username, pista, formattedDate, hour)
-    });
+    // const transporter = getTransporter();
+    // transporter.sendMail({
+    //   from: process.env.USERNAME_J,
+    //   to: [process.env.USERNAME_P, process.env.USERNAME_T],
+    //   subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
+    //   text: `YO PERRA! RESERVA CONFIRMADA a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
+    //   html: htmlTemplate(username, pista, formattedDate, hour)
+    // });
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
-    const transporter = getTransporter();
-    transporter.sendMail({
-      from: process.env.USERNAME_J,
-      to: [process.env.USERNAME_P, process.env.USERNAME_T],
-      subject: 'YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO',
-      text: `YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
-      html: `<h1>YOUS A BITCH! INTENTALO OTRA VEZ!</h1><p>LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
-    });
+    // const transporter = getTransporter();
+    // transporter.sendMail({
+    //   from: process.env.USERNAME_J,
+    //   to: [process.env.USERNAME_P, process.env.USERNAME_T],
+    //   subject: 'YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO',
+    //   text: `YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
+    //   html: `<h1>YOUS A BITCH! INTENTALO OTRA VEZ!</h1><p>LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
+    // });
   }
 };
