@@ -3,9 +3,15 @@ import nodemailer from 'nodemailer';
 import { htmlTemplate } from './template.js';
 
 // CONF GOOGLE TOKEN
-
-
-
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.USERNAME_J,
+    pass: process.env.GMAIL_PASS
+  },
+});
 
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
@@ -81,7 +87,6 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
     await browser.close();
     //SEND EMAIL
-    const transporter = getTransporter();
     transporter.sendMail({
       from: process.env.USERNAME_J,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
@@ -91,13 +96,12 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     });
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
-    // const transporter = getTransporter();
-    // transporter.sendMail({
-    //   from: process.env.USERNAME_J,
-    //   to: [process.env.USERNAME_P, process.env.USERNAME_T],
-    //   subject: 'YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO',
-    //   text: `YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
-    //   html: `<h1>YOUS A BITCH! INTENTALO OTRA VEZ!</h1><p>LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
-    // });
+    transporter.sendMail({
+      from: process.env.USERNAME_J,
+      to: [process.env.USERNAME_P, process.env.USERNAME_T],
+      subject: 'YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO',
+      text: `YOUS A BITCH! INTENTALO OTRA VEZ! LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
+      html: `<h1>YOUS A BITCH! INTENTALO OTRA VEZ!</h1><p>LA RESERVA HA PETADO a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! <p>Tom cómeme los huevos</p></p>`
+    });
   }
 };
