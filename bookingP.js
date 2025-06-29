@@ -14,15 +14,15 @@ const updateCronSchedule = async () => {
         const data = await response.text();
         const row = data.split('\n')[3].split('\r')[0].split(',');
         const row2 = data.split('\n')[7].split('\r')[0].split(',');
-        const row3 = data.split('\n')[11].split('\r')[0].split(',');
+        // const row3 = data.split('\n')[11].split('\r')[0].split(',');
         const [, day, hour] = row
         const [, day1, hour1] = row2;
-        const [, day2, hour2] = row3;
+        // const [, day2, hour2] = row3;
         // Stop all current cron jobs
         currentCronJobs.forEach(job => job.stop());
         currentCronJobs = []; // Reset jobs array
         // Create new cron jobs
-        const schedules = [{ day: day, hour: hour }, { day: day1, hour: hour1 }, { day: day2, hour: hour2 }];
+        const schedules = [{ day: day, hour: hour }, { day: day1, hour: hour1 }];
         schedules.forEach((schedule, index) => {
             const cronExpression = DAY_DEFINITIONS[schedule.day]
             const job = cron.schedule(cronExpression, () => {
