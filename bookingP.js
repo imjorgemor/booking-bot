@@ -14,10 +14,8 @@ const updateCronSchedule = async () => {
         const data = await response.text();
         const row = data.split('\n')[3].split('\r')[0].split(',');
         const row2 = data.split('\n')[7].split('\r')[0].split(',');
-        // const row3 = data.split('\n')[11].split('\r')[0].split(',');
         const [, day, hour] = row
         const [, day1, hour1] = row2;
-        // const [, day2, hour2] = row3;
         // Stop all current cron jobs
         currentCronJobs.forEach(job => job.stop());
         currentCronJobs = []; // Reset jobs array
