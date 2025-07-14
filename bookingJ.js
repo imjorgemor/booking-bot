@@ -34,7 +34,7 @@ const updateCronSchedule = async () => {
     }
 };
 
-cron.schedule('0 23 * * *', () => {
+cron.schedule('0 22 * * *', () => {
     console.log(`Updating cron schedules for ${username} at ${new Date().toISOString()}`);
     updateCronSchedule();
 }, {

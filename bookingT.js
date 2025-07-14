@@ -16,10 +16,17 @@ const updateCronSchedule = async () => {
         const row2 = data.split('\n')[6].split('\r')[0].split(',');
         const [, day, hour] = row
         const [, day1, hour1] = row2;
-        currentCronJobs.forEach(job => job.stop());
+        currentCronJobs.forEach(job => {
+          try {
+              job.stop();
+          } catch (error) {
+              console.error('Error stopping cron job:', error);
+          }
+      });
         currentCronJobs = []; // Reset jobs array
         // Create new cron jobs
         const schedules = [{ day: day, hour: hour }, { day: day1, hour: hour1 }];
+        console.log(schedules)
         schedules.forEach((schedule, index) => {
             const cronExpression = DAY_DEFINITIONS[schedule.day]
             const job = cron.schedule(cronExpression, () => {
@@ -27,14 +34,14 @@ const updateCronSchedule = async () => {
                 runBookAsync(username, password, schedule.hour);
             });
             currentCronJobs.push(job);
-            console.log(`Scheduling booking #${index + 1} for for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
+            console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
         })
     } catch (error) {
         console.error('Failed to update cron schedule T:', error);
     }
 };
 
-cron.schedule('0 23 * * *', () => {
+cron.schedule('0 22 * * *', () => {
     console.log(`Updating cron schedules for ${username} at ${new Date().toISOString()}`);
     updateCronSchedule();
 }, {
