@@ -29,11 +29,23 @@ const updateCronSchedule = async () => {
         console.log(schedules)
         schedules.forEach((schedule, index) => {
             const cronExpression = DAY_DEFINITIONS[schedule.day]
+            console.log(`DEBUG: cronExpression = "${cronExpression}"`);
+            
+            if (!cronExpression) {
+                console.error(`❌ CRITICAL: No cron expression found for day "${schedule.day}"`);
+                return;
+            }
+            console.log({cronExpression})
+            if (!cron.validate(cronExpression)) {
+              console.error(`❌ CRITICAL: Invalid cron expression "${cronExpression}"`);
+              return;
+          }
             const job = cron.schedule(cronExpression, () => {
                 console.log(`Running booking ${username} #${index + 1} at ${new Date().toISOString()}...`);
                 runBookAsync(username, password, schedule.hour);
             });
             currentCronJobs.push(job);
+            console.log(currentCronJobs.length)
             console.log(`Scheduling booking #${index + 1} for ${username} on ${schedule.day} at ${schedule.hour} with cron: ${cronExpression}`);
         })
     } catch (error) {
@@ -41,9 +53,9 @@ const updateCronSchedule = async () => {
     }
 };
 
-cron.schedule('0 22 * * *', () => {
+cron.schedule('0 22 * * *', async () => {
     console.log(`Updating cron schedules for ${username} at ${new Date().toISOString()}`);
-    updateCronSchedule();
+    await updateCronSchedule();
 }, {
     timezone: 'Europe/Madrid'
 });
