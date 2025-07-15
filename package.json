@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node bookingJ & sleep 10 && node bookingP & sleep 10 && node bookingT & wait",
+    "start": "concurrently \"node bookingJ\" \"node bookingP\" \"node bookingT\"",
     "postinstall": "npx playwright install --with-deps"
   },
   "keywords": [],
@@ -13,7 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.46.1",
-    "@types/node": "^22.5.1"
+    "@types/node": "^22.5.1",
+    "concurrently": "^9.2.0"
   },
   "dependencies": {
     "node-cron": "^3.0.3",
