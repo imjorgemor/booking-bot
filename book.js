@@ -97,6 +97,13 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     });
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
+    const transporter = getTransporter();
+    transporter.sendMail({
+      from: process.env.USERNAME_J,
+      to: [process.env.USERNAME_P, process.env.USERNAME_T],
+      subject: 'YOUS A BITCH! LA RESERVA HA FALLADO',
+      text: `YO PERRA! LA RESERVA HA FALLADO a nombre de ${username}. Tom cómeme los huevos`,
+    });
   } finally {
     const date = new Date();
     console.log(`booking closed: ${username}-${hour}-${date.getDate() + 4}`)
