@@ -98,6 +98,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
   } finally {
+    const date = new Date();
     console.log(`booking closed: ${username}-${hour}-${date.getDate() + 4}`)
   }
 };
