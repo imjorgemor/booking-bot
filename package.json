@@ -12,13 +12,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.46.1",
-    "@types/node": "^22.5.1",
-    "concurrently": "^9.2.0"
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.18.4",
+    "concurrently": "^9.2.1"
   },
   "dependencies": {
     "node-cron": "^3.0.3",
-    "nodemailer": "^7.0.3",
-    "playwright": "^1.46.1"
+    "nodemailer": "^7.0.6",
+    "playwright": "^1.55.0"
   }
 }
