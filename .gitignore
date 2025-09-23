@@ -7,7 +7,3 @@ dist-ssr
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-/monitoring.js
-/testFile.js
-/testbot.js
-/testemail.js

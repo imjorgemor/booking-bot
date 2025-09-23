@@ -4,18 +4,17 @@ import { htmlTemplate } from './template.js';
 
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
-
-export const runBookAsync = async (username, password, hour = '12:00') => {
-  // CONF GOOGLE TOKEN
   const getTransporter = () => nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
+    port: 465,
+    secure: true, // true for 465, false for other ports
     auth: {
       user: process.env.USERNAME_J,
       pass: process.env.GMAIL_PASS
     },
   });
+
+export const runBookAsync = async (username, password, hour = '12:00') => {
   try {
     console.log(`start booking ${username} at ${new Date().toISOString()}...`);
     const browser = await playwright[browserType].launch({
