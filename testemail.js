@@ -15,6 +15,6 @@ const transporter = getTransporter();
 transporter.sendMail({
   from: process.env.USERNAME_J,
   to: [process.env.USERNAME_J],
-  subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
-  text: `YO PERRA! RESERVA CONFIRMADA`,
+  subject: 'YOUS A BITCH! DEPLOYMENT SUCCESSFULL',
+  text: `YO PERRA! DEPLOYMENT OK`,
 });
