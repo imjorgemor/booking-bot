@@ -2,31 +2,10 @@ import playwright from 'playwright';
 import { htmlTemplate } from './template.js';
 import { Resend } from 'resend';
 
+// CONF RESEND
 const resend = new Resend(process.env.RESEND_API_KEY);
-
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
-const getTransporter = () => nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.USERNAME_J,
-    pass: process.env.GMAIL_PASS
-  },
-  connectionTimeout: 120000,    // 2 minutes (Railway is slow)
-  greetingTimeout: 60000,       // 1 minute
-  socketTimeout: 120000,        // 2 minutes
-  pool: true,                   // Use connection pooling
-  maxConnections: 1,            // Limit connections
-  rateDelta: 20000,             // Rate limiting
-  rateLimit: 5,
-  requireTLS: true,             // Force TLS
-  tls: {
-    ciphers: 'SSLv3',
-    rejectUnauthorized: false
-  }
-});
 
 export const runBookAsync = async (username, password, hour = '12:00') => {
   try {
