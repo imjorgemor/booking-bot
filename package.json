@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"node bookingJ\" \"node bookingP\" \"node bookingT\" \"node testemail\"",
+    "start": "concurrently \"node bookingJ\" \"node bookingP\" \"node bookingT\" \"node emailtest\"",
     "postinstall": "npx playwright install --with-deps"
   },
   "keywords": [],
@@ -18,12 +18,10 @@
   },
   "dependencies": {
     "node-cron": "^3.0.3",
-    "nodemailer": "^7.0.6",
-    "playwright": "^1.55.0"
+    "playwright": "^1.55.0",
+    "resend": "^6.1.0"
   },
-  
-    "engines": {
-      "node": "22.x"
-    }
-
+  "engines": {
+    "node": "22.x"
+  }
 }

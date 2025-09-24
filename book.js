@@ -1,30 +1,32 @@
 import playwright from 'playwright';
-import nodemailer from 'nodemailer';
 import { htmlTemplate } from './template.js';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
-  const getTransporter = () => nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.USERNAME_J,
-      pass: process.env.GMAIL_PASS
-    },
-    connectionTimeout: 120000,    // 2 minutes (Railway is slow)
-    greetingTimeout: 60000,       // 1 minute
-    socketTimeout: 120000,        // 2 minutes
-    pool: true,                   // Use connection pooling
-    maxConnections: 1,            // Limit connections
-    rateDelta: 20000,             // Rate limiting
-    rateLimit: 5,
-    requireTLS: true,             // Force TLS
-    tls: {
-        ciphers: 'SSLv3',
-        rejectUnauthorized: false
-    }
-  });
+const getTransporter = () => nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: process.env.USERNAME_J,
+    pass: process.env.GMAIL_PASS
+  },
+  connectionTimeout: 120000,    // 2 minutes (Railway is slow)
+  greetingTimeout: 60000,       // 1 minute
+  socketTimeout: 120000,        // 2 minutes
+  pool: true,                   // Use connection pooling
+  maxConnections: 1,            // Limit connections
+  rateDelta: 20000,             // Rate limiting
+  rateLimit: 5,
+  requireTLS: true,             // Force TLS
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
+  }
+});
 
 export const runBookAsync = async (username, password, hour = '12:00') => {
   try {
@@ -97,20 +99,19 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)
     await browser.close();
     //SEND EMAIL
-    const transporter = getTransporter();
-    transporter.sendMail({
-      from: process.env.USERNAME_J,
+    await resend.emails.send({
+      from: process.env.RESEND_EMAIL,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
       subject: 'YOUS A BITCH! RESERVA CONFIRMADA',
       text: `YO PERRA! RESERVA CONFIRMADA a nombre de ${username}: el dia ${formattedDate} a las ${hour} y en la pishta ${pista}! Tom cómeme los huevos`,
       html: htmlTemplate(username, pista, formattedDate, hour)
     });
+
     console.log(`Email sent: ${username} - ${formattedDate} - ${hour}`);
   } catch (error) {
     console.log('no se ha completado la reserva error:' + error)
-    const transporter = getTransporter();
-    transporter.sendMail({
-      from: process.env.USERNAME_J,
+    await resend.emails.send({
+      from: process.env.RESEND_EMAIL,
       to: [process.env.USERNAME_P, process.env.USERNAME_T],
       subject: 'YOUS A BITCH! LA RESERVA HA FALLADO',
       text: `YO PERRA! LA RESERVA HA FALLADO a nombre de ${username}. Tom cómeme los huevos`,
