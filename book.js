@@ -17,7 +17,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     const context = await browser.newContext();
     const page = await context.newPage();
     // Navigate to the login page
-    await page.goto('https://clubmetropolitan.com/en/member-access/');
+    await page.goto('https://clubmetropolitan.com/socios/login?referer=%2Fsocios%2Fperfil%2F');
     // Perform login and redirect to book page
     await page.fill('#email', username); // Replace with actual selector
     await page.fill('#pwd', password); // Replace with actual selector
