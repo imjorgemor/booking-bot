@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"node bookingJ\" \"node bookingP\" \"node bookingT\" \"node emailtest\" \node testBook\"",
+    "start": "concurrently \"node bookingJ\" \"node bookingP\" \"node bookingT\" \"node emailtest\" \"node testBook\"",
     "postinstall": "npx playwright install --with-deps"
   },
   "keywords": [],
