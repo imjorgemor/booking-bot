@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 //CONF CHROMIUM
 const browserType = 'chromium'; // chrome
 
-export const runBookAsync = async (username, password, hour = '12:00') => {
+export const runBookAsync = async (username, password, hour = '20:00') => {
   try {
     console.log(`START TEST ${username} at ${new Date().toISOString()}...`);
     const browser = await playwright[browserType].launch({
@@ -34,44 +34,28 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     // open date selector
     await page.waitForSelector('#dateAALL');
     await page.click('#dateAALL');
-
-    // Create a Date object for today (remember server is one day before)
-    // const date = new Date();
-    // Add [number] days to the current date remember reservation is made one day before
-    // put 4 days because reservation is made in utc time 
-    // date.setDate(date.getDate() + 3);
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
     // // convert the updated Date object to a localized date string if needed
-    // const day = String(date.getDate()).padStart(2, '0');
-    // const month = String(date.getMonth() + 1).padStart(2, '0');
-    // const year = date.getFullYear();
-    // const formattedDate = `${day}/${month}/${year}`;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
     // // Convert the updated Date object to a localized date string if needed
-    // const dateSelector = `[data-day="${formattedDate}"]`
+    const dateSelector = `[data-day="${formattedDate}"]`
     // //search today date format date DD/MM/YYYY
-    // await page.waitForSelector(dateSelector);
-    // await page.click(dateSelector)
-    // await page.waitForSelector('.hour-collapse')
+    await page.waitForSelector(dateSelector);
+    await page.click(dateSelector)
+    await page.waitForSelector('.hour-collapse')
     // const buttonClick = await page.waitForSelector(`[data-content="${hour}"]`)
-    // const pista = await buttonClick.innerHTML()
-    // console.log('check hour available before midnight')
-    // // Calculate buffer time to wait until midnight, new date return utc date
-    // const now = new Date();
-    // const midnightSpain = new Date();
-    // //Set time to midnight i 00-1 hour spain + 0.5 seconds in Spain's local time (UTC+1)
-    // midnightSpain.setUTCHours(22, 0, 0, 100); // 23:00:00.250 UTC winter time// 22 utc summer time, equivalent to 00:00:00.100 in Spain (UTC+1)
-    // // Adjust for the next day if it's already past midnight in Spain
-    // if (now.getTime() >= midnightSpain.getTime()) {
-    //   midnightSpain.setUTCDate(midnightSpain.getUTCDate() + 1);
-    // }
-    // // Calculate the time difference
-    // const timeToWait = midnightSpain.getTime() - now.getTime();
-    // await new Promise(resolve => setTimeout(resolve, timeToWait));
-    // // make reservations exact hour[set the hour of reservation]
+    // await buttonClick.innerHTML()
+   
     // await page.click(`[data-content="${hour}"]`)
     // await page.waitForSelector("#btnReserva")
     // await page.click("#btnReserva")
     // await page.waitForSelector("#btnConfirmar")
     // await page.click("#btnConfirmar")
+    console.log('booking made successfully before midnight')
     // console.log(`reserva enviada ${username} :` + formattedDate + " a las " + hour)
     // await page.waitForSelector(".swal-icon--success")
     // console.log(`reserva confirmada ${username} :` + formattedDate + " a las " + hour)

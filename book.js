@@ -69,6 +69,7 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     await new Promise(resolve => setTimeout(resolve, timeToWait));
     // make reservations exact hour[set the hour of reservation]
     await page.click(`[data-content="${hour}"]`)
+    console.log('hour clicked')
     await page.waitForSelector("#btnReserva")
     await page.click("#btnReserva")
     await page.waitForSelector("#btnConfirmar")
@@ -91,9 +92,9 @@ export const runBookAsync = async (username, password, hour = '12:00') => {
     console.log('no se ha completado la reserva error:' + error)
     await resend.emails.send({
       from: process.env.RESEND_EMAIL,
-      to: [process.env.USERNAME_P, process.env.USERNAME_T],
+      to: [process.env.USERNAME_P, process.env.USERNAME_T, process.env.USERNAME_J],
       subject: 'YOUS A BITCH! LA RESERVA HA FALLADO',
-      text: `YO PERRA! LA RESERVA HA FALLADO a nombre de ${username}. Tom cómeme los huevos`,
+      text: `YO PERRA! LA RESERVA HA FALLADO a nombre de ${username}: ${error} Tom cómeme los huevos`,
     });
   } finally {
     const date = new Date();
