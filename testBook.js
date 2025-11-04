@@ -63,7 +63,7 @@ export const runBookAsync = async (username, password, hour = '20:00') => {
     //SEND EMAIL
     await resend.emails.send({
       from: process.env.RESEND_EMAIL,
-      to: [process.env.USERNAME_P, process.env.USERNAME_T, process.env.USERNAME_J],
+      to: [process.env.USERNAME_J],
       subject: 'YOUS A BITCH! TEST FUNCIONAL CONFIRMADO',
       text: `YOUS A BITCH! TEST FUNCIONAL CONFIRMADO`,
     });
@@ -71,7 +71,7 @@ export const runBookAsync = async (username, password, hour = '20:00') => {
     console.log('HA FALLADO EL TEST:' + error)
     await resend.emails.send({
       from: process.env.RESEND_EMAIL,
-      to: [process.env.USERNAME_P, process.env.USERNAME_T, process.env.USERNAME_J],
+      to: [process.env.USERNAME_J],
       subject: 'YOUS A BITCH! EL TEST HA FALLADO',
       text: `YOUS A BITCH! EL TEST HA FALLADO. Pablo cómeme los huevos`,
     });
